@@ -10,4 +10,4 @@ Landing page desarrollada con HTML, CSS y JavaScript.
 
 ## Publicación
 
-Disponible mediante GitHub Pages.
+Disponible mediante GitHub Pages. 
