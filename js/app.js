@@ -1,54 +1,69 @@
-// Datos de cada ambiente. Las claves coinciden con data-room en el HTML.
+// Datos de cada ambiente del coworking
 const roomsData = {
   'coworking': {
     tag: 'Espacio compartido',
     title: 'Sala Coworking',
-    desc: 'El espacio principal. Abierto, luminoso y pensado para trabajar en comunidad.',
+    desc: 'Un espacio abierto y luminoso, pensado para trabajar en comunidad. Escritorios amplios, sillas ergonómicas y luz natural durante todo el día.',
     feats: [
-      'Escritorios amplios y ergonómicos',
+      'Escritorios individuales regulables',
       'Internet de fibra óptica (500 Mb)',
       'Enchufes y USB en cada puesto',
       'Zona de llamadas y silencio',
       'Acceso 24/7 con credencial'
     ],
-    cap: '20 puestos',
-    area: '40 m²',
-    avail: '14 libres'
+    cap: '24 puestos',
+    area: '48 m²',
+    avail: '18 libres'
   },
   'reuniones': {
     tag: 'Sala cerrada',
     title: 'Sala de Reuniones',
-    desc: 'Sala privada e insonorizada, ideal para reuniones con clientes y videollamadas.',
+    desc: 'Sala privada e insonorizada, equipada con todo lo necesario para reuniones con clientes, presentaciones y videollamadas.',
     feats: [
       'Mesa para 8 personas',
       'Pantalla 55" y HDMI inalámbrico',
       'Sistema de videoconferencia',
-      'Pizarra y rotafolios',
-      'Reserva por bloques de 1 h'
+      'Pizarra de vidrio y rotafolios',
+      'Reserva por bloques de 1 hora'
     ],
     cap: '8 personas',
     area: '18 m²',
     avail: 'Por hora'
   },
-  'oficina': {
+  'oficina-a': {
     tag: 'Oficina privada',
-    title: 'Oficina Privada',
-    desc: 'Oficina cerrada para equipos de hasta 4 personas. Privacidad sin perder la comunidad.',
+    title: 'Oficina A',
+    desc: 'Oficina cerrada para equipos pequeños que buscan privacidad sin perder el acceso a las áreas comunes.',
+    feats: [
+      'Escritorios para 3 personas',
+      'Ventana al patio interior',
+      'Cerrada con llave propia',
+      'Armario y estantería incluidos',
+      'Contrato mensual flexible'
+    ],
+    cap: '3 personas',
+    area: '14 m²',
+    avail: 'Disponible'
+  },
+  'oficina-b': {
+    tag: 'Oficina privada',
+    title: 'Oficina B',
+    desc: 'Oficina amplia y silenciosa, ideal para equipos de hasta 4 personas que necesitan concentración y privacidad.',
     feats: [
       'Escritorios para 4 personas',
       'Ventana exterior con luz natural',
+      'Sala de estar integrada',
       'Cerrada con llave propia',
-      'Armario y estantería',
       'Contrato mensual flexible'
     ],
     cap: '4 personas',
-    area: '16 m²',
+    area: '18 m²',
     avail: 'Disponible'
   },
   'comun': {
     tag: 'Área compartida',
-    title: 'Zona Común / Cocina',
-    desc: 'El corazón social del coworking. Cocina completa, mesa comunal y sillones.',
+    title: 'Zona Común',
+    desc: 'El corazón social del coworking. Cocina completa, mesa comunal y sillones. Ideal para almuerzos, pausas y encuentros informales.',
     feats: [
       'Cocina equipada (heladera, microondas, cafetera)',
       'Mesa comunal para 8 personas',
@@ -56,43 +71,29 @@ const roomsData = {
       'Dispenser de agua filtrada',
       'Acceso libre para todos los miembros'
     ],
-    cap: '15 personas',
-    area: '28 m²',
+    cap: '20 personas',
+    area: '32 m²',
     avail: 'Acceso libre'
-  },
-  'bano': {
-    tag: 'Servicios',
-    title: 'Baño',
-    desc: 'Baño completo con ducha, para uso de todos los miembros del coworking.',
-    feats: [
-      'Ducha y vestidor',
-      'Toallero y secador',
-      'Amenities básicos',
-      'Limpieza diaria',
-      'Accesible para todos'
-    ],
-    cap: '1 persona',
-    area: '5 m²',
-    avail: 'Incluido'
   },
   'recepcion': {
     tag: 'Acceso',
     title: 'Recepción',
-    desc: 'El primer espacio que verás al entrar. Atención a visitantes y guardado de pertenencias.',
+    desc: 'El primer espacio que verás al entrar. Recepción, guardado de pertenencias y atención a visitantes y clientes.',
     feats: [
       'Atención L-V de 9 a 18 h',
       'Casilleros con candado',
       'Recepción de paquetería',
-      'Sala de espera',
+      'Sala de espera con sillones',
       'Dirección comercial'
     ],
     cap: '—',
-    area: '8 m²',
+    area: '22 m²',
     avail: 'Incluido'
   }
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+  const rooms     = document.querySelectorAll('.room');
   const emptyEl   = document.getElementById('room-empty');
   const contentEl = document.getElementById('room-content');
   const tagEl     = document.getElementById('rp-tag');
@@ -103,16 +104,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const areaEl    = document.getElementById('rp-area');
   const availEl   = document.getElementById('rp-avail');
   const panelEl   = document.getElementById('room-panel');
-  const buttons   = document.querySelectorAll('.room-btn');
 
   function selectRoom(id) {
     const data = roomsData[id];
     if (!data) return;
 
-    buttons.forEach(b => b.classList.remove('selected'));
-    const current = document.querySelector(`.room-btn[data-room="${id}"]`);
+    // Estados visuales
+    rooms.forEach(r => r.classList.remove('selected'));
+    const current = document.querySelector(`.room[data-room="${id}"]`);
     if (current) current.classList.add('selected');
 
+    // Rellenar panel
     tagEl.textContent   = data.tag;
     titleEl.textContent = data.title;
     descEl.textContent  = data.desc;
@@ -121,23 +123,23 @@ document.addEventListener('DOMContentLoaded', () => {
     areaEl.textContent  = data.area;
     availEl.textContent = data.avail;
 
+    // Cambiar vistas
     emptyEl.classList.add('hidden');
     contentEl.classList.remove('hidden');
     contentEl.style.animation = 'none';
-    void contentEl.offsetHeight;
+    void contentEl.offsetHeight; // reflow para reiniciar animación
     contentEl.style.animation = 'fadeUp .3s ease';
   }
 
-  buttons.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      selectRoom(btn.dataset.room);
+  rooms.forEach(room => {
+    room.addEventListener('click', () => {
+      selectRoom(room.dataset.room);
       if (window.innerWidth <= 1080) {
-        panelEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        panelEl.scrollIntoView({ behavior:'smooth', block:'start' });
       }
     });
   });
 
-  // Selección inicial
+  // Seleccionar la sala principal al cargar
   selectRoom('coworking');
 });
